@@ -1,0 +1,142 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile • CarMarket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/editprofile.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="container header-content">
+        <div class="logo">
+            <a href="/">CarMarket</a>
+        </div>
+        <nav class="main-nav">
+            <a href="/cars">Browse Cars</a>
+            <a href="/postlisting">Post Listing</a>
+            <a href="/about">About</a>
+        </nav>
+        <div class="header-actions">
+            <span class="user-label">Hi, John</span>
+            <a href="/logout" class="btn btn-outline">Logout</a>
+        </div>
+    </div>
+</header>
+
+<main class="page">
+    <section class="hero-bar">
+        <div class="container hero-content">
+            <div>
+                <h1>Edit profile</h1>
+                <p>Update your account information and keep your contact details up to date for buyers and dealers.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section">
+        <div class="container layout">
+
+            <aside class="info-card">
+                <h2>Your account</h2>
+                <p>
+                    This information is used when you post listings and when buyers contact you.
+                    Make sure it is accurate and up to date.
+                </p>
+                <ul>
+                    <li>Your email is used for login and important messages.</li>
+                    <li>Your phone can be shown on listings if you choose so later.</li>
+                    <li>Username is your public identity on the platform.</li>
+                </ul>
+
+                <div class="info-box">
+                    <h3>Need to change password?</h3>
+                    <p>
+                        You can change your password from the
+                        <a href="/profile">profile page</a> or a dedicated password page.
+                    </p>
+                </div>
+            </aside>
+
+
+            <form class="profile-form" action="/profile/edit" method="post">
+                <h2>Profile details</h2>
+
+                <div class="form-row">
+                    <div class="form-control">
+                        <label for="fullName">Full name</label>
+                        <input id="fullName" name="fullName" type="text"
+                               placeholder="John Doe" required>
+                    </div>
+                    <div class="form-control">
+                        <label for="username">Username</label>
+                        <input id="username" name="username" type="text"
+                               placeholder="johndoe" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-control">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email"
+                               placeholder="john.doe@example.com" required>
+                    </div>
+                    <div class="form-control">
+                        <label for="phoneNumber">Phone number (optional)</label>
+                        <input id="phoneNumber" name="phoneNumber" type="tel"
+                               placeholder="+359 88 123 4567">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-control">
+                        <label for="location">Location (city)</label>
+                        <input id="location" name="location" type="text"
+                               placeholder="Sofia, Bulgaria">
+                    </div>
+                    <div class="form-control">
+                        <label for="dealerProfile">Dealer profile (optional)</label>
+                        <select id="dealerProfile" name="dealerId">
+                            <option value="">Not a dealer / none</option>
+                            <option value="1">AutoStar Dealership</option>
+                            <option value="2">Premium Motors</option>
+                            <option value="3">CityCars Sofia</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-control form-control-inline">
+                    <label class="checkbox-label">
+                        <input id="showPhone" name="showPhoneOnListings" type="checkbox">
+                        <span>Show my phone number on my listings (optional).</span>
+                    </label>
+                </div>
+
+
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <a href="/profile" class="btn btn-light">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-content">
+        <p>© <span id="year"></span> CarMarket. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="/about">About</a>
+            <a href="/terms">Terms</a>
+            <a href="/privacy">Privacy</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

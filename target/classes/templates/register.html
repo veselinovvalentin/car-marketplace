@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up • CarMarket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/register.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="container header-content">
+        <div class="logo">
+
+            <a href="/">CarMarket</a>
+        </div>
+        <nav class="main-nav">
+            <a href="/cars">Browse Cars</a>
+            <a href="/postlisting">Post Listing</a>
+            <a href="/about">About</a>
+        </nav>
+        <div class="header-actions">
+            <a href="/login" class="btn btn-outline">Login</a>
+            <a href="/register" class="btn btn-primary">Sign Up</a>
+        </div>
+    </div>
+</header>
+
+<main class="page">
+    <section class="hero-bar">
+        <div class="container hero-content">
+            <div>
+                <h1>Create your account</h1>
+                <p>Sign up to save your favourite cars, post listings and manage everything from your dashboard.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container layout">
+
+            <aside class="info-card">
+                <h2>Why join CarMarket?</h2>
+                <ul>
+                    <li>Post listings as a private seller or dealer.</li>
+                    <li>Save cars to your favourites and compare later.</li>
+                    <li>Manage all your listings from a simple dashboard.</li>
+                    <li>Enjoy a clean, ad–light experience.</li>
+                </ul>
+
+                <div class="info-box">
+                    <h3>Already have an account?</h3>
+                    <p>
+                        You can <a href="/login">log in here</a> with your email and password.
+                    </p>
+                </div>
+            </aside>
+
+
+
+            <form class="auth-form" th:action="@{/register}" th:method="POST" th:object="${registerRequest}">
+                <h2>Sign up</h2>
+
+                <div class="form-control">
+                    <label for="fullName">Full name</label>
+                    <input id="fullName" name="fullName" type="text" placeholder="John Doe" required th:field="*{fullName}">
+                </div>
+
+                <div class="form-control">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" placeholder="johndoe" required th:field="*{username}">
+                </div>
+
+                <div class="form-control">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" placeholder="you@example.com" required th:field="*{email}">
+                </div>
+
+                <div class="form-control">
+                    <label for="phoneNumber">Phone number (optional)</label>
+                    <input id="phoneNumber" name="phoneNumber" type="tel" placeholder="+359 88 123 4567" th:field="*{phoneNumber}">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-control">
+                        <label for="password">Password</label>
+                        <input id="password" name="password" type="password" required th:field="*{password}">
+                    </div>
+                    <div class="form-control">
+                        <label for="confirmPassword">Confirm password</label>
+                        <input id="confirmPassword" name="confirmPassword" type="password" required th:field="*{confirmPassword}">
+                    </div>
+                </div>
+
+                <div class="form-control form-control-inline">
+                    <label class="checkbox-label">
+                        <input id="termsAccepted" name="termsAccepted" type="checkbox" required  th:field="*{termsAccepted}">
+                        <span>I agree to the <a href="/terms" target="_blank">Terms of Use</a>.</span>
+                    </label>
+                </div>
+
+
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create account</button>
+                    <p class="form-text">
+                        Already registered?
+                        <a href="/login">Log in</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-content">
+        <p>© <span id="year"></span> CarMarket. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="/about">About</a>
+            <a href="/terms">Terms</a>
+            <a href="/privacy">Privacy</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

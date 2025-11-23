@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post a Listing • CarMarket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/postlisting.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container header-content">
+        <div class="logo">
+            <a href="/">CarMarket</a>
+        </div>
+
+        <nav class="main-nav">
+            <a href="/cars">Browse Cars</a>
+            <a href="/postlisting">Post Listing</a>
+            <a href="/about">About</a>
+        </nav>
+
+        <div class="header-actions">
+            <a href="/login" class="btn btn-outline">Login</a>
+            <a href="/register" class="btn btn-primary">Sign Up</a>
+        </div>
+    </div>
+</header>
+
+
+<main class="page">
+
+    <section class="hero-bar">
+        <div class="container hero-content">
+            <div>
+                <h1>Post a new listing</h1>
+                <p>Sell your car quickly by providing accurate information and good photos.</p>
+            </div>
+            <div class="hero-badge">
+                <span>Step 1</span>
+                <strong>Listing details</strong>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section">
+        <div class="container layout">
+
+            <aside class="tips-card">
+                <h2>Tips for a great listing</h2>
+                <ul>
+                    <li>Use a descriptive title – include make, model and year.</li>
+                    <li>Add realistic mileage, year and price.</li>
+                    <li>Upload bright photos from different angles.</li>
+                    <li>Be honest about the condition and any issues.</li>
+                </ul>
+            </aside>
+
+            <form class="listing-form"
+                  th:action="@{/postlisting}"
+                  th:method="post"
+                  th:object="${createListingRequest}"
+                  enctype="multipart/form-data">
+                <div class="form-group">
+                    <h2>Car details</h2>
+
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="title">Listing title</label>
+                            <input id="title" name="title" type="text"
+                                   placeholder="2019 BMW 320d" required th:field="*{title}">
+                        </div>
+
+                        <div class="form-control">
+                            <label for="location">Location</label>
+                            <input id="location" name="location" type="text"
+                                   placeholder="Sofia, Bulgaria" required th:field="*{location}">
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="brand">Brand</label>
+                            <select id="brand" name="brand" required th:field="*{brand}">
+                                <option value="">Select brand</option>
+                                <option value="BMW">BMW</option>
+                                <option value="Audi">Audi</option>
+                                <option value="Mercedes-Benz">Mercedes-Benz</option>
+                                <option value="Volkswagen">Volkswagen</option>
+                                <option value="Toyota">Toyota</option>
+                                <option value="Honda">Honda</option>
+                                <option value="Ford">Ford</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-control">
+                            <label for="model">Model</label>
+                            <input id="model" name="model" type="text"
+                                   placeholder="320d, A4, Golf..." required th:field="*{model}">
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="year">Year</label>
+                            <input id="year" name="year"
+                                   type="number" min="1900" max="2025"
+                                   placeholder="2019" required th:field="*{year}">
+                        </div>
+
+                        <div class="form-control">
+                            <label for="mileage">Mileage (km)</label>
+                            <input id="mileage" name="mileage"
+                                   type="number" min="0"
+                                   placeholder="85000" required th:field="*{mileageKm}">
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-control">
+                            <label for="fuelType">Fuel type</label>
+                            <select id="fuelType" name="fuelType" required th:field="*{fuelType}">
+                                <option value="">Select fuel</option>
+                                <option value="PETROL">Petrol</option>
+                                <option value="DIESEL">Diesel</option>
+                                <option value="HYBRID">Hybrid</option>
+                                <option value="ELECTRIC">Electric</option>
+                                <option value="LPG">LPG</option>
+                            </select>
+                        </div>
+
+                        <div class="form-control">
+                            <label for="transmission">Transmission</label>
+                            <select id="transmission" name="transmission" required th:field="*{transmission}">
+                                <option value="">Select transmission</option>
+                                <option value="MANUAL">Manual</option>
+                                <option value="AUTOMATIC">Automatic</option>
+                                <option value="SEMI_AUTOMATIC">Semi-Automatic</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-control">
+                        <label for="bodyType">Body type</label>
+                        <select id="bodyType" name="bodyType" required th:field="*{bodyType}">
+                            <option value="">Select body type</option>
+                            <option value="VAN">Van</option>
+                            <option value="SUV">SUV</option>
+                            <option value="CABRIOLET">Cabriolet</option>
+                            <option value="WAGON">Wagon</option>
+                            <option value="COUPE">Coupe</option>
+                            <option value="MINIVAN">Minivan</option>
+                            <option value="PICKUP">Pickup</option>
+                            <option value="SEDAN">Sedan</option>
+                            <option value="STRETCH_LIMOUSINE">Stretch Limousine</option>
+                            <option value="HATCHBACK">Hatchback</option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+
+                <div class="form-group">
+                    <h2>Pricing</h2>
+
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="price">Price (€)</label>
+                            <input id="price" name="price"
+                                   type="number" min="0"
+                                   placeholder="14900" required th:field="*{price}">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <h2>Description</h2>
+                    <div class="form-control">
+                        <label for="description">Details about the car</label>
+                        <textarea id="description" name="description" rows="5"
+                                  placeholder="Describe condition, service history, extras, and anything important."
+                                  required th:field="*{description}"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h2>Photos</h2>
+
+                    <div class="form-control">
+                        <label for="mainImageUrl">Main photo URL</label>
+                        <input id="mainImageUrl"
+                               name="mainImageUrl"
+                               type="url"
+                               placeholder="https://example.com/my-car.jpg"
+                               th:field="*{mainImageUrl}">
+                        <small class="field-hint">
+                            Paste the URL of the main photo. This image appears on the homepage and listings.
+                        </small>
+                    </div>
+                </div>
+
+
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Publish listing</button>
+                    <a href="/profile" class="btn-link">Cancel</a>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+    <div class="container footer-content">
+        <p>© <span id="year"></span> CarMarket. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="/about">About</a>
+            <a href="/terms">Terms</a>
+            <a href="/privacy">Privacy</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

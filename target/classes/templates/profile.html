@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile • CarMarket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/profile.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="container header-content">
+        <div class="logo">
+            <a href="/">CarMarket</a>
+        </div>
+        <nav class="main-nav">
+            <a href="/cars">Browse Cars</a>
+            <a href="/postlisting">Post Listing</a>
+            <a href="/about">About</a>
+        </nav>
+        <div class="header-actions">
+            <span class="user-label">Hi, <span th:text="${user.username}"></span></span>
+            <a href="/logout" class="btn btn-outline">Logout</a>
+        </div>
+    </div>
+</header>
+
+<main class="page">
+
+
+    <section class="hero-bar">
+        <div class="container hero-content">
+            <div>
+                <h1>My profile</h1>
+                <p>Manage your account details and keep track of your listings.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section">
+        <div class="container grid">
+
+
+            <aside class="profile-card">
+                <div class="avatar">
+                    <span th:text="${#strings.substring(user.fullName, 0, 1)}">J</span>
+                </div>
+
+                <h2 class="profile-name" th:text="${user.fullName}">John Doe</h2>
+
+                <p class="profile-username">
+                    @<span th:text="${user.username}">johndoe</span>
+                </p>
+
+                <div class="profile-info">
+                    <div class="info-row">
+                        <span class="info-label">Email</span>
+                        <span class="info-value" th:text="${user.email}">john.doe@example.com</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Phone</span>
+                        <span class="info-value" th:text="${user.phoneNumber}"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Member since</span>
+                        <span class="info-value"
+                              th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Role</span>
+                        <span class="info-value" th:text="${user.role}"></span>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <a href="/editprofile" class="btn btn-primary btn-full">Edit profile</a>
+                    <button type="button" class="btn btn-light btn-full">Change password</button>
+                </div>
+            </aside>
+
+
+            <section class="main-panel">
+
+
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <span class="stat-label">Total listings</span>
+                        <span class="stat-value" th:text="${totalListings}">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Active listings</span>
+                        <span class="stat-value" th:text="${activeListings}">0</span>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>My recent listings</h2>
+                        <a href="/my-listings" class="link-small">View all my listings →</a>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="listings-table">
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Created</th>
+                                <th>Status</th>
+                                <th>Price</th>
+                                <th class="col-actions">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="listing : ${listings}">
+                                <td th:text="${listing.title}">2019 BMW 320d</td>
+                                <td th:text="${#temporals.format(listing.createdAt, 'yyyy-MM-dd')}">2025-03-10</td>
+                                <td>
+                                    <span class="badge" th:text="${listing.status}">ACTIVE</span>
+                                </td>
+                                <td th:text="'€' + ${listing.price}">€16,900</td>
+                                <td class="col-actions">
+                                    <a class="btn btn-table"
+                                       th:href="@{'/cars/' + ${listing.id}}">View</a>
+                                    <a class="btn btn-table"
+                                       th:href="@{'/my-listings/' + ${listing.id} + '/edit'}">Edit</a>
+                                </td>
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(listings)}">
+                                <td colspan="5" class="empty-row">
+                                    You don't have any listings yet.
+                                    <a href="/postlisting">Create your first listing →</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-content">
+        <p>© <span id="year"></span> CarMarket. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="/about">About</a>
+            <a href="/terms">Terms</a>
+            <a href="/privacy">Privacy</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

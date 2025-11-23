@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Login • CarMarket</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-content">
+    <div class="logo">
+      <a th:href="@{/}">CarMarket</a>
+    </div>
+    <nav class="main-nav">
+      <a th:href="@{/cars}">Browse Cars</a>
+      <a th:href="@{/postlisting}">Post Listing</a>
+      <a th:href="@{/about}">About</a>
+    </nav>
+    <div class="header-actions">
+      <a th:href="@{/login}" class="btn btn-outline">Login</a>
+      <a th:href="@{/register}" class="btn btn-primary">Sign Up</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <section class="hero-bar">
+    <div class="container hero-content">
+      <div>
+        <h1>Welcome back</h1>
+        <p>Log in to manage your listings, save favourite cars and continue where you left off.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container layout">
+
+      <aside class="info-card">
+        <h2>Don’t have an account?</h2>
+        <p>
+          Creating an account lets you:
+        </p>
+        <ul>
+          <li>Post cars as a private seller or dealer.</li>
+          <li>Save listings to your favourites.</li>
+          <li>Access your personal dashboard.</li>
+        </ul>
+
+        <div class="info-box">
+          <p>
+            New here?
+            <a th:href="@{/register}">Sign up now</a> in less than a minute.
+          </p>
+        </div>
+      </aside>
+
+
+      <form class="auth-form" th:action="@{/login}" method="post">
+        <h2>Login</h2>
+
+        <div class="form-control">
+          <label for="username">Username or email</label>
+          <input id="username"
+                 name="username"
+                 type="text"
+                 placeholder="you@example.com or username"
+                 required>
+        </div>
+
+        <div class="form-control">
+          <label for="password">Password</label>
+          <input id="password"
+                 name="password"
+                 type="password"
+                 required>
+        </div>
+
+        <div class="form-row-inline">
+          <label class="checkbox-label">
+            <input id="rememberMe" name="remember-me" type="checkbox">
+            <span>Remember me</span>
+          </label>
+
+          <a href="#" class="link-small">Forgot password?</a>
+        </div>
+
+
+        <div class="form-error" th:if="${param.error}">
+          Invalid username or password. Please try again.
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Log in</button>
+          <p class="form-text">
+            New to CarMarket?
+            <a th:href="@{/register}">Create an account</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-content">
+    <p>© <span id="year"></span> CarMarket. All rights reserved.</p>
+    <div class="footer-links">
+      <a th:href="@{/about}">About</a>
+      <a th:href="@{/terms}">Terms</a>
+      <a th:href="@{/privacy}">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
