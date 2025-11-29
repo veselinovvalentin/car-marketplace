@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>CarMarket • Find Your Next Car</title>
@@ -15,33 +16,43 @@
 
         <nav class="main-nav">
             <a th:href="@{/cars}">Browse Cars</a>
+            <a th:href="@{/postlisting}">Post Listing</a>
             <a th:href="@{/about}">About</a>
             <a th:href="@{/contact}">Contact</a>
         </nav>
 
         <div class="header-actions">
-
-            <div th:if="${user == null}">
+            <div th:if="${user == null}" class="header-actions-group">
                 <a th:href="@{/login}" class="btn btn-outline">Login</a>
                 <a th:href="@{/register}" class="btn btn-primary">Sign Up</a>
             </div>
 
-
-            <div th:if="${user != null}" class="user-menu">
+            <div th:if="${user != null}" class="header-actions-group user-menu">
                 <span class="user-label">
-                    Hi, <span th:text="${user.username}">User</span>
-                </span>
+    Hi, <a th:href="@{/profile}">
+        <span th:text="${user.username}">User</span>
+    </a>
+</span>
+
+                <a th:href="@{/postlisting}" class="btn btn-primary">Post Listing</a>
                 <a th:href="@{/my-listings}" class="btn btn-outline">My Listings</a>
                 <a th:href="@{/editprofile}" class="btn btn-outline">Edit Profile</a>
 
+                <a th:if="${user.role.name() == 'ADMIN'}"
+                   th:href="@{/admin}"
+                   class="btn btn-outline">
+                    Admin
+                </a>
 
                 <form th:action="@{/logout}" method="post" class="inline-form">
-                    <button type="submit" class="btn btn-primary">Logout</button>
+                    <button type="submit" class="btn btn-outline">Logout</button>
                 </form>
             </div>
         </div>
     </div>
 </header>
+
+
 
 <main>
 
@@ -53,7 +64,6 @@
                     Browse listings from private sellers across the country.
                     Compare prices, specs and contact sellers quickly.
                 </p>
-
 
                 <form class="search-form" th:action="@{/cars}" method="get">
                     <div class="form-row">
@@ -92,7 +102,6 @@
                 </div>
             </div>
 
-
             <div class="hero-image">
                 <div class="hero-car-card">
                     <div class="hero-car-main">
@@ -112,19 +121,16 @@
                 <a th:href="@{/cars}" class="link">View all cars →</a>
             </div>
 
-
             <div class="card-grid"
                  th:if="${featuredListings != null and !#lists.isEmpty(featuredListings)}">
 
                 <article class="car-card" th:each="listing : ${featuredListings}">
 
                     <div class="car-image-wrapper">
-
                         <img th:if="${listing.mainImageUrl != null and !#strings.isEmpty(listing.mainImageUrl)}"
                              th:src="${listing.mainImageUrl}"
                              alt="Car photo"
                              class="car-image"/>
-
 
                         <div class="car-image-placeholder"
                              th:if="${listing.mainImageUrl == null or #strings.isEmpty(listing.mainImageUrl)}">
@@ -157,14 +163,12 @@
                 </article>
             </div>
 
-
             <div class="empty-state"
                  th:if="${featuredListings == null or #lists.isEmpty(featuredListings)}">
                 <p>No published listings yet.</p>
             </div>
         </div>
     </section>
-
 
     <section class="section section-muted">
         <div class="container">

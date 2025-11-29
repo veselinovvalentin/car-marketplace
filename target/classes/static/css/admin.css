@@ -16,8 +16,6 @@
     --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-
-
 *,
 *::before,
 *::after {
@@ -37,8 +35,6 @@ a {
     text-decoration: none;
 }
 
-
-
 .container {
     width: 100%;
     max-width: var(--max-width);
@@ -51,10 +47,10 @@ a {
 .site-header {
     position: sticky;
     top: 0;
-    z-index: 40;
+    z-index: 50;
     background: rgba(15, 23, 42, 0.96);
-    backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    backdrop-filter: blur(16px);
 }
 
 .header-content {
@@ -65,6 +61,10 @@ a {
     gap: 1.5rem;
 }
 
+.logo {
+    flex: 1 0 auto;
+}
+
 .logo a {
     font-weight: 700;
     font-size: 1.15rem;
@@ -73,8 +73,10 @@ a {
 }
 
 .main-nav {
+    flex: 1 0 auto;
     display: flex;
-    gap: 1.1rem;
+    justify-content: center;
+    gap: 1rem;
     font-size: 0.95rem;
 }
 
@@ -91,9 +93,33 @@ a {
 }
 
 .header-actions {
+    flex: 1 0 auto;
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-label {
+    font-size: 0.9rem;
+    color: #e5e7eb;
+}
+
+.user-label span {
+    color: #bfdbfe;
+    font-weight: 600;
 }
 
 
@@ -113,10 +139,10 @@ a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.45rem 1rem;
+    padding: 0.5rem 1.1rem;
     border-radius: 999px;
     border: 1px solid transparent;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
     transition: background 0.16s, color 0.16s, border-color 0.16s, box-shadow 0.16s, transform 0.12s;
@@ -154,8 +180,6 @@ a {
 .btn-light:hover {
     background: #e5e7eb;
 }
-
-
 
 .btn-table {
     padding: 0.25rem 0.6rem;
@@ -207,6 +231,7 @@ a {
 }
 
 
+
 .hero-bar {
     background: radial-gradient(circle at top left, #1d4ed8 0, #0f172a 40%, #020617 100%);
     color: #e5e7eb;
@@ -233,8 +258,6 @@ a {
     max-width: 520px;
     color: #cbd5f5;
 }
-
-
 
 .hero-kpi {
     display: flex;
@@ -514,6 +537,14 @@ a {
 
 
 @media (max-width: 900px) {
+    .header-content {
+        gap: 0.8rem;
+    }
+
+    .main-nav {
+        display: none;
+    }
+
     .hero-content {
         flex-direction: column;
         align-items: flex-start;
@@ -525,10 +556,6 @@ a {
 }
 
 @media (max-width: 640px) {
-    .main-nav {
-        display: none;
-    }
-
     .card {
         padding: 0.9rem;
     }

@@ -33,7 +33,6 @@ public class IndexController {
     public ModelAndView getHomePage(Principal principal) {
         ModelAndView mav = new ModelAndView("index");
 
-
         if (principal != null) {
             String username = principal.getName();
             User user = userService.getByUsername(username);
@@ -48,8 +47,7 @@ public class IndexController {
 
     @GetMapping("/register")
     public ModelAndView getRegisterPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("register");
+        ModelAndView modelAndView = new ModelAndView("register");
         modelAndView.addObject("registerRequest", new RegisterRequest());
         return modelAndView;
     }
@@ -71,24 +69,10 @@ public class IndexController {
 
     @GetMapping("/login")
     public ModelAndView getLoginPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
-        return modelAndView;
+        return new ModelAndView("login");
     }
 
-    @GetMapping("/cars")
-    public ModelAndView getCarsPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("cars");
-        return modelAndView;
-    }
 
-    @GetMapping("/admin")
-    public ModelAndView getAdminPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("admin");
-        return modelAndView;
-    }
 
     @GetMapping("/editprofile")
     public ModelAndView getEditProfilePage(Principal principal) {
@@ -105,8 +89,6 @@ public class IndexController {
 
     @GetMapping("/cardetails")
     public ModelAndView getCarDetailsPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("cardetails");
-        return modelAndView;
+        return new ModelAndView("cardetails");
     }
 }

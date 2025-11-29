@@ -1,5 +1,6 @@
-    <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Edit Profile • CarMarket</title>
@@ -10,19 +11,47 @@
 <header class="site-header">
     <div class="container header-content">
         <div class="logo">
-            <a href="/">CarMarket</a>
+            <a th:href="@{/}">CarMarket</a>
         </div>
+
         <nav class="main-nav">
-            <a href="/cars">Browse Cars</a>
-            <a href="/postlisting">Post Listing</a>
-            <a href="/about">About</a>
+            <a th:href="@{/cars}">Browse Cars</a>
+            <a th:href="@{/postlisting}">Post Listing</a>
+            <a th:href="@{/about}">About</a>
+            <a th:href="@{/contact}">Contact</a>
         </nav>
+
         <div class="header-actions">
-            <span class="user-label">Hi, John</span>
-            <a href="/logout" class="btn btn-outline">Logout</a>
+            <div th:if="${user == null}" class="header-actions-group">
+                <a th:href="@{/login}" class="btn btn-outline">Login</a>
+                <a th:href="@{/register}" class="btn btn-primary">Sign Up</a>
+            </div>
+
+            <div th:if="${user != null}" class="header-actions-group user-menu">
+                <span class="user-label">
+    Hi, <a th:href="@{/profile}">
+        <span th:text="${user.username}">User</span>
+    </a>
+</span>
+
+                <a th:href="@{/postlisting}" class="btn btn-primary">Post Listing</a>
+                <a th:href="@{/my-listings}" class="btn btn-outline">My Listings</a>
+                <a th:href="@{/editprofile}" class="btn btn-outline">Edit Profile</a>
+
+                <a th:if="${user.role.name() == 'ADMIN'}"
+                   th:href="@{/admin}"
+                   class="btn btn-outline">
+                    Admin
+                </a>
+
+                <form th:action="@{/logout}" method="post" class="inline-form">
+                    <button type="submit" class="btn btn-outline">Logout</button>
+                </form>
+            </div>
         </div>
     </div>
 </header>
+
 
 <main class="page">
     <section class="hero-bar">
@@ -33,7 +62,6 @@
             </div>
         </div>
     </section>
-
 
     <section class="section">
         <div class="container layout">
@@ -54,13 +82,12 @@
                     <h3>Need to change password?</h3>
                     <p>
                         You can change your password from the
-                        <a href="/profile">profile page</a> or a dedicated password page.
+                        <a th:href="@{/profile}">profile page</a> or a dedicated password page.
                     </p>
                 </div>
             </aside>
 
-
-            <form class="profile-form" action="/profile/edit" method="post">
+            <form class="profile-form" th:action="@{/profile/edit}" method="post">
                 <h2>Profile details</h2>
 
                 <div class="form-row">
@@ -113,11 +140,9 @@
                     </label>
                 </div>
 
-
-
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save changes</button>
-                    <a href="/profile" class="btn btn-light">Cancel</a>
+                    <a th:href="@{/profile}" class="btn btn-light">Cancel</a>
                 </div>
             </form>
         </div>
@@ -128,9 +153,9 @@
     <div class="container footer-content">
         <p>© <span id="year"></span> CarMarket. All rights reserved.</p>
         <div class="footer-links">
-            <a href="/about">About</a>
-            <a href="/terms">Terms</a>
-            <a href="/privacy">Privacy</a>
+            <a th:href="@{/about}">About</a>
+            <a th:href="@{/terms}">Terms</a>
+            <a th:href="@{/privacy}">Privacy</a>
         </div>
     </div>
 </footer>

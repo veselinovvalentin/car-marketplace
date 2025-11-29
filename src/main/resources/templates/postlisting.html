@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Post a Listing • CarMarket</title>
@@ -11,18 +11,43 @@
 <header class="site-header">
     <div class="container header-content">
         <div class="logo">
-            <a href="/">CarMarket</a>
+            <a th:href="@{/}">CarMarket</a>
         </div>
 
         <nav class="main-nav">
-            <a href="/cars">Browse Cars</a>
-            <a href="/postlisting">Post Listing</a>
-            <a href="/about">About</a>
+            <a th:href="@{/cars}">Browse Cars</a>
+            <a th:href="@{/postlisting}">Post Listing</a>
+            <a th:href="@{/about}">About</a>
+            <a th:href="@{/contact}">Contact</a>
         </nav>
 
         <div class="header-actions">
-            <a href="/login" class="btn btn-outline">Login</a>
-            <a href="/register" class="btn btn-primary">Sign Up</a>
+            <div th:if="${user == null}" class="header-actions-group">
+                <a th:href="@{/login}" class="btn btn-outline">Login</a>
+                <a th:href="@{/register}" class="btn btn-primary">Sign Up</a>
+            </div>
+
+            <div th:if="${user != null}" class="header-actions-group user-menu">
+                <span class="user-label">
+    Hi, <a th:href="@{/profile}">
+        <span th:text="${user.username}">User</span>
+    </a>
+</span>
+
+                <a th:href="@{/postlisting}" class="btn btn-primary">Post Listing</a>
+                <a th:href="@{/my-listings}" class="btn btn-outline">My Listings</a>
+                <a th:href="@{/editprofile}" class="btn btn-outline">Edit Profile</a>
+
+                <a th:if="${user.role.name() == 'ADMIN'}"
+                   th:href="@{/admin}"
+                   class="btn btn-outline">
+                    Admin
+                </a>
+
+                <form th:action="@{/logout}" method="post" class="inline-form">
+                    <button type="submit" class="btn btn-outline">Logout</button>
+                </form>
+            </div>
         </div>
     </div>
 </header>
@@ -43,7 +68,6 @@
         </div>
     </section>
 
-
     <section class="section">
         <div class="container layout">
 
@@ -57,76 +81,57 @@
                 </ul>
             </aside>
 
-            <form class="listing-form"
-                  th:action="@{/postlisting}"
-                  th:method="post"
-                  th:object="${createListingRequest}"
-                  enctype="multipart/form-data">
+            <form class="listing-form" th:action="@{/postlisting}" th:method="post" th:object="${createListingRequest}" enctype="multipart/form-data">
+
                 <div class="form-group">
                     <h2>Car details</h2>
 
                     <div class="form-row">
                         <div class="form-control">
                             <label for="title">Listing title</label>
-                            <input id="title" name="title" type="text"
-                                   placeholder="2019 BMW 320d" required th:field="*{title}">
+                            <input id="title" type="text" placeholder="2019 BMW 320d" required th:field="*{title}">
                         </div>
 
                         <div class="form-control">
                             <label for="location">Location</label>
-                            <input id="location" name="location" type="text"
-                                   placeholder="Sofia, Bulgaria" required th:field="*{location}">
+                            <input id="location" type="text" placeholder="Sofia, Bulgaria" required th:field="*{location}">
                         </div>
                     </div>
-
 
                     <div class="form-row">
                         <div class="form-control">
-                            <label for="brand">Brand</label>
-                            <select id="brand" name="brand" required th:field="*{brand}">
+                            <label for="brandId">Brand</label>
+                            <select id="brandId" required th:field="*{brandId}">
                                 <option value="">Select brand</option>
-                                <option value="BMW">BMW</option>
-                                <option value="Audi">Audi</option>
-                                <option value="Mercedes-Benz">Mercedes-Benz</option>
-                                <option value="Volkswagen">Volkswagen</option>
-                                <option value="Toyota">Toyota</option>
-                                <option value="Honda">Honda</option>
-                                <option value="Ford">Ford</option>
-                                <option value="Other">Other</option>
+                                <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
                             </select>
                         </div>
 
-
                         <div class="form-control">
-                            <label for="model">Model</label>
-                            <input id="model" name="model" type="text"
-                                   placeholder="320d, A4, Golf..." required th:field="*{model}">
+                            <label for="modelId">Model</label>
+                            <select id="modelId" required th:field="*{modelId}">
+                                <option value="">Select model</option>
+                                <option th:each="model : ${models}" th:value="${model.id}" th:text="${model.brand.name + ' ' + model.name}"></option>
+                            </select>
                         </div>
                     </div>
-
 
                     <div class="form-row">
                         <div class="form-control">
                             <label for="year">Year</label>
-                            <input id="year" name="year"
-                                   type="number" min="1900" max="2025"
-                                   placeholder="2019" required th:field="*{year}">
+                            <input id="year" type="number" min="1900" max="2025" placeholder="2019" required th:field="*{year}">
                         </div>
 
                         <div class="form-control">
-                            <label for="mileage">Mileage (km)</label>
-                            <input id="mileage" name="mileage"
-                                   type="number" min="0"
-                                   placeholder="85000" required th:field="*{mileageKm}">
+                            <label for="mileageKm">Mileage (km)</label>
+                            <input id="mileageKm" type="number" min="0" placeholder="85000" required th:field="*{mileageKm}">
                         </div>
                     </div>
 
-
                     <div class="form-row">
-
                         <div class="form-control">
                             <label for="fuelType">Fuel type</label>
-                            <select id="fuelType" name="fuelType" required th:field="*{fuelType}">
+                            <select id="fuelType" required th:field="*{fuelType}">
                                 <option value="">Select fuel</option>
                                 <option value="PETROL">Petrol</option>
                                 <option value="DIESEL">Diesel</option>
@@ -138,37 +143,39 @@
 
                         <div class="form-control">
                             <label for="transmission">Transmission</label>
-                            <select id="transmission" name="transmission" required th:field="*{transmission}">
+                            <select id="transmission" required th:field="*{transmission}">
                                 <option value="">Select transmission</option>
                                 <option value="MANUAL">Manual</option>
                                 <option value="AUTOMATIC">Automatic</option>
                                 <option value="SEMI_AUTOMATIC">Semi-Automatic</option>
                             </select>
                         </div>
-
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="bodyType">Body type</label>
+                            <select id="bodyType" th:field="*{bodyType}">
+                                <option value="">Select body type</option>
+                                <option value="VAN">Van</option>
+                                <option value="SUV">SUV</option>
+                                <option value="CABRIOLET">Cabriolet</option>
+                                <option value="WAGON">Wagon</option>
+                                <option value="COUPE">Coupe</option>
+                                <option value="MINIVAN">Minivan</option>
+                                <option value="PICKUP">Pickup</option>
+                                <option value="SEDAN">Sedan</option>
+                                <option value="STRETCH_LIMOUSINE">Stretch Limousine</option>
+                                <option value="HATCHBACK">Hatchback</option>
+                            </select>
+                        </div>
 
-                    <div class="form-control">
-                        <label for="bodyType">Body type</label>
-                        <select id="bodyType" name="bodyType" required th:field="*{bodyType}">
-                            <option value="">Select body type</option>
-                            <option value="VAN">Van</option>
-                            <option value="SUV">SUV</option>
-                            <option value="CABRIOLET">Cabriolet</option>
-                            <option value="WAGON">Wagon</option>
-                            <option value="COUPE">Coupe</option>
-                            <option value="MINIVAN">Minivan</option>
-                            <option value="PICKUP">Pickup</option>
-                            <option value="SEDAN">Sedan</option>
-                            <option value="STRETCH_LIMOUSINE">Stretch Limousine</option>
-                            <option value="HATCHBACK">Hatchback</option>
-                        </select>
+                        <div class="form-control">
+                            <label for="engine">Engine</label>
+                            <input id="engine" type="text" placeholder="2.0d, 1.4 TSI..." th:field="*{engine}">
+                        </div>
                     </div>
-
                 </div>
-
-
 
                 <div class="form-group">
                     <h2>Pricing</h2>
@@ -176,21 +183,16 @@
                     <div class="form-row">
                         <div class="form-control">
                             <label for="price">Price (€)</label>
-                            <input id="price" name="price"
-                                   type="number" min="0"
-                                   placeholder="14900" required th:field="*{price}">
+                            <input id="price" type="number" min="0" placeholder="14900" required th:field="*{price}">
                         </div>
                     </div>
                 </div>
-
 
                 <div class="form-group">
                     <h2>Description</h2>
                     <div class="form-control">
                         <label for="description">Details about the car</label>
-                        <textarea id="description" name="description" rows="5"
-                                  placeholder="Describe condition, service history, extras, and anything important."
-                                  required th:field="*{description}"></textarea>
+                        <textarea id="description" rows="5" placeholder="Describe condition, service history, extras, and anything important." required th:field="*{description}"></textarea>
                     </div>
                 </div>
 
@@ -199,22 +201,14 @@
 
                     <div class="form-control">
                         <label for="mainImageUrl">Main photo URL</label>
-                        <input id="mainImageUrl"
-                               name="mainImageUrl"
-                               type="url"
-                               placeholder="https://example.com/my-car.jpg"
-                               th:field="*{mainImageUrl}">
-                        <small class="field-hint">
-                            Paste the URL of the main photo. This image appears on the homepage and listings.
-                        </small>
+                        <input id="mainImageUrl" type="url" placeholder="https://example.com/my-car.jpg" th:field="*{mainImageUrl}">
+                        <small class="field-hint">Paste the URL of the main photo.</small>
                     </div>
                 </div>
 
-
-
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Publish listing</button>
-                    <a href="/profile" class="btn-link">Cancel</a>
+                    <a th:href="@{/profile}" class="btn-link">Cancel</a>
                 </div>
 
             </form>
@@ -223,14 +217,13 @@
 
 </main>
 
-
 <footer class="site-footer">
     <div class="container footer-content">
         <p>© <span id="year"></span> CarMarket. All rights reserved.</p>
         <div class="footer-links">
-            <a href="/about">About</a>
-            <a href="/terms">Terms</a>
-            <a href="/privacy">Privacy</a>
+            <a th:href="@{/about}">About</a>
+            <a th:href="@{/terms}">Terms</a>
+            <a th:href="@{/privacy}">Privacy</a>
         </div>
     </div>
 </footer>

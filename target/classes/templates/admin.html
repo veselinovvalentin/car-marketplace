@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard • CarMarket</title>
@@ -10,24 +11,49 @@
 <header class="site-header">
     <div class="container header-content">
         <div class="logo">
-            <a href="/">CarMarket</a>
+            <a th:href="@{/}">CarMarket</a>
         </div>
+
         <nav class="main-nav">
-            <a href="/cars">Browse Cars</a>
-            <a href="/postlisting">Post Listing</a>
-            <a href="/about">About</a>
+            <a th:href="@{/cars}">Browse Cars</a>
+            <a th:href="@{/postlisting}">Post Listing</a>
+            <a th:href="@{/about}">About</a>
+            <a th:href="@{/contact}">Contact</a>
         </nav>
+
         <div class="header-actions">
-            <!-- In real app you'll show current admin + logout -->
-            <span class="admin-label">Admin</span>
-            <a href="/logout" class="btn btn-outline">Logout</a>
+            <div th:if="${user == null}" class="header-actions-group">
+                <a th:href="@{/login}" class="btn btn-outline">Login</a>
+                <a th:href="@{/register}" class="btn btn-primary">Sign Up</a>
+            </div>
+
+            <div th:if="${user != null}" class="header-actions-group user-menu">
+                <span class="user-label">
+    Hi, <a th:href="@{/profile}">
+        <span th:text="${user.username}">User</span>
+    </a>
+</span>
+
+                <a th:href="@{/postlisting}" class="btn btn-primary">Post Listing</a>
+                <a th:href="@{/my-listings}" class="btn btn-outline">My Listings</a>
+                <a th:href="@{/editprofile}" class="btn btn-outline">Edit Profile</a>
+
+                <a th:if="${user.role.name() == 'ADMIN'}"
+                   th:href="@{/admin}"
+                   class="btn btn-outline">
+                    Admin
+                </a>
+
+                <form th:action="@{/logout}" method="post" class="inline-form">
+                    <button type="submit" class="btn btn-outline">Logout</button>
+                </form>
+            </div>
         </div>
     </div>
 </header>
 
 <main class="page">
 
-    <!-- HERO / TITLE -->
     <section class="hero-bar">
         <div class="container hero-content">
             <div>
@@ -37,17 +63,18 @@
             <div class="hero-kpi">
                 <div class="hero-kpi-item">
                     <span class="hero-kpi-label">Pending listings</span>
-                    <span class="hero-kpi-value">12</span>
+                    <span class="hero-kpi-value"
+                          th:text="${pendingListings != null ? #lists.size(pendingListings) : 0}">0</span>
                 </div>
                 <div class="hero-kpi-item">
                     <span class="hero-kpi-label">Total brands</span>
-                    <span class="hero-kpi-value">18</span>
+                    <span class="hero-kpi-value"
+                          th:text="${brands != null ? #lists.size(brands) : 0}">0</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- PENDING LISTINGS -->
     <section class="section">
         <div class="container">
             <div class="section-header">
@@ -56,7 +83,7 @@
                     <p class="section-subtitle">New listings waiting for approval before becoming visible to users.</p>
                 </div>
                 <div class="section-actions">
-                    <button class="btn btn-light" type="button">Refresh</button>
+                    <a class="btn btn-light" th:href="@{/admin}">Refresh</a>
                 </div>
             </div>
 
@@ -75,63 +102,45 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!-- Static rows for now. Later you’ll loop with Thymeleaf. -->
-                        <tr>
-                            <td>#1023</td>
-                            <td>2019 BMW 320d</td>
-                            <td>ivan.petrov</td>
-                            <td>2025-03-10</td>
-                            <td>€16,900</td>
-                            <td><span class="badge badge-pending">PENDING</span></td>
-                            <td class="col-actions">
-                                <!-- Later: form action="/admin/listings/{id}/approve" method="post" etc. -->
-                                <a href="/cars/1023" class="btn btn-table btn-view">View</a>
-                                <button type="button" class="btn btn-table btn-approve">Approve</button>
-                                <button type="button" class="btn btn-table btn-reject">Reject</button>
+                        <tr th:if="${pendingListings == null or #lists.isEmpty(pendingListings)}">
+                            <td colspan="7" class="empty-state">
+                                No pending listings at the moment.
                             </td>
                         </tr>
-                        <tr>
-                            <td>#1024</td>
-                            <td>2017 Audi A4</td>
-                            <td>autostar_dealer</td>
-                            <td>2025-03-11</td>
-                            <td>€14,200</td>
-                            <td><span class="badge badge-pending">PENDING</span></td>
-                            <td class="col-actions">
-                                <a href="/cars/1024" class="btn btn-table btn-view">View</a>
-                                <button type="button" class="btn btn-table btn-approve">Approve</button>
-                                <button type="button" class="btn btn-table btn-reject">Reject</button>
+                        <tr th:each="listing : ${pendingListings}">
+                            <td th:text="${listing.id}">ID</td>
+                            <td th:text="${listing.title}">Title</td>
+                            <td th:text="${listing.owner.username}">Seller</td>
+                            <td th:text="${#temporals.format(listing.createdAt, 'yyyy-MM-dd HH:mm')}">2025-03-10</td>
+                            <td th:text="${'€' + listing.price}">€0</td>
+                            <td>
+                                <span class="badge badge-pending"
+                                      th:text="${listing.status}">PENDING</span>
                             </td>
-                        </tr>
-                        <tr>
-                            <td>#1025</td>
-                            <td>2020 Toyota Corolla Hybrid</td>
-                            <td>maria89</td>
-                            <td>2025-03-11</td>
-                            <td>€18,500</td>
-                            <td><span class="badge badge-pending">PENDING</span></td>
                             <td class="col-actions">
-                                <a href="/cars/1025" class="btn btn-table btn-view">View</a>
-                                <button type="button" class="btn btn-table btn-approve">Approve</button>
-                                <button type="button" class="btn btn-table btn-reject">Reject</button>
+                                <a th:href="@{'/cars/' + ${listing.id}}"
+                                   class="btn btn-table btn-view">View</a>
+
+                                <form th:action="@{'/admin/listings/' + ${listing.id} + '/approve'}"
+                                      method="post"
+                                      style="display:inline-block;">
+                                    <button type="submit" class="btn btn-table btn-approve">Approve</button>
+                                </form>
+
+                                <form th:action="@{'/admin/listings/' + ${listing.id} + '/reject'}"
+                                      method="post"
+                                      style="display:inline-block;">
+                                    <button type="submit" class="btn btn-table btn-reject">Reject</button>
+                                </form>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-
-                <!-- Simple pagination for admin pending list -->
-                <div class="pagination">
-                    <button class="page disabled" type="button">Prev</button>
-                    <button class="page active" type="button">1</button>
-                    <button class="page" type="button">2</button>
-                    <button class="page" type="button">Next</button>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- BRANDS & MODELS MANAGEMENT -->
     <section class="section section-muted">
         <div class="container">
             <div class="section-header">
@@ -144,7 +153,6 @@
             </div>
 
             <div class="brands-models-grid">
-                <!-- Brands column -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Brands</h3>
@@ -160,42 +168,37 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <!-- Example static data -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>BMW</td>
-                                    <td class="col-actions">
-                                        <button type="button" class="btn btn-table btn-small">Edit</button>
-                                        <button type="button" class="btn btn-table btn-small btn-danger">Delete</button>
-                                    </td>
+                                <tr th:if="${brands == null or #lists.isEmpty(brands)}">
+                                    <td colspan="3" class="empty-state">No brands yet. Add one below.</td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Audi</td>
+                                <tr th:each="brand : ${brands}">
+                                    <td th:text="${brand.id}">1</td>
+                                    <td th:text="${brand.name}">BMW</td>
                                     <td class="col-actions">
-                                        <button type="button" class="btn btn-table btn-small">Edit</button>
-                                        <button type="button" class="btn btn-table btn-small btn-danger">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Toyota</td>
-                                    <td class="col-actions">
-                                        <button type="button" class="btn btn-table btn-small">Edit</button>
-                                        <button type="button" class="btn btn-table btn-small btn-danger">Delete</button>
+                                        <form th:action="@{'/admin/brands/' + ${brand.id} + '/delete'}"
+                                              method="post"
+                                              style="display:inline-block;"
+                                              onsubmit="return confirm('Delete this brand? It may break existing models/listings.');">
+                                            <button type="submit" class="btn btn-table btn-small btn-danger">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <!-- Add brand form -->
-                        <form class="inline-form" action="/admin/brands" method="post">
+                        <form class="inline-form"
+                              th:action="@{/admin/brands}"
+                              method="post">
                             <h4>Add new brand</h4>
                             <div class="inline-form-row">
                                 <div class="inline-form-control">
                                     <label for="brandName">Brand name</label>
-                                    <input id="brandName" name="name" type="text" placeholder="e.g. Honda" required>
+                                    <input id="brandName"
+                                           name="name"
+                                           type="text"
+                                           placeholder="e.g. Honda"
+                                           required>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-inline">Add</button>
                             </div>
@@ -203,7 +206,6 @@
                     </div>
                 </div>
 
-                <!-- Models column -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Models</h3>
@@ -220,54 +222,50 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <!-- Example static models -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>BMW</td>
-                                    <td>3 Series</td>
-                                    <td class="col-actions">
-                                        <button type="button" class="btn btn-table btn-small">Edit</button>
-                                        <button type="button" class="btn btn-table btn-small btn-danger">Delete</button>
-                                    </td>
+                                <tr th:if="${models == null or #lists.isEmpty(models)}">
+                                    <td colspan="4" class="empty-state">No models yet. Add one below.</td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Audi</td>
-                                    <td>A4</td>
+                                <tr th:each="model : ${models}">
+                                    <td th:text="${model.id}">1</td>
+                                    <td th:text="${model.brand.name}">BMW</td>
+                                    <td th:text="${model.name}">3 Series</td>
                                     <td class="col-actions">
-                                        <button type="button" class="btn btn-table btn-small">Edit</button>
-                                        <button type="button" class="btn btn-table btn-small btn-danger">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Toyota</td>
-                                    <td>Corolla</td>
-                                    <td class="col-actions">
-                                        <button type="button" class="btn btn-table btn-small">Edit</button>
-                                        <button type="button" class="btn btn-table btn-small btn-danger">Delete</button>
+                                        <form th:action="@{'/admin/models/' + ${model.id} + '/delete'}"
+                                              method="post"
+                                              style="display:inline-block;"
+                                              onsubmit="return confirm('Delete this model? It may break existing listings.');">
+                                            <button type="submit" class="btn btn-table btn-small btn-danger">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <!-- Add model form -->
-                        <form class="inline-form" action="/admin/models" method="post">
+                        <form class="inline-form"
+                              th:action="@{/admin/models}"
+                              method="post">
                             <h4>Add new model</h4>
                             <div class="inline-form-row">
                                 <div class="inline-form-control">
                                     <label for="modelBrand">Brand</label>
-                                    <select id="modelBrand" name="brandId" required>
+                                    <select id="modelBrand"
+                                            name="brandId"
+                                            required>
                                         <option value="">Select brand</option>
-                                        <option value="1">BMW</option>
-                                        <option value="2">Audi</option>
-                                        <option value="3">Toyota</option>
+                                        <option th:each="brand : ${brands}"
+                                                th:value="${brand.id}"
+                                                th:text="${brand.name}">
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="inline-form-control">
                                     <label for="modelName">Model name</label>
-                                    <input id="modelName" name="name" type="text" placeholder="e.g. Civic" required>
+                                    <input id="modelName"
+                                           name="name"
+                                           type="text"
+                                           placeholder="e.g. Civic"
+                                           required>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-inline">Add</button>
                             </div>

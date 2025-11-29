@@ -10,23 +10,48 @@
 <header class="site-header">
     <div class="container header-content">
         <div class="logo">
-            <a href="/">CarMarket</a>
+            <a th:href="@{/}">CarMarket</a>
         </div>
+
         <nav class="main-nav">
-            <a href="/cars">Browse Cars</a>
-            <a href="/postlisting">Post Listing</a>
-            <a href="/about">About</a>
+            <a th:href="@{/cars}">Browse Cars</a>
+            <a th:href="@{/postlisting}">Post Listing</a>
+            <a th:href="@{/about}">About</a>
+            <a th:href="@{/contact}">Contact</a>
         </nav>
+
         <div class="header-actions">
-            <span class="user-label">Hi, <span th:text="${user.username}"></span></span>
-            <a href="/logout" class="btn btn-outline">Logout</a>
+            <div th:if="${user == null}" class="header-actions-group">
+                <a th:href="@{/login}" class="btn btn-outline">Login</a>
+                <a th:href="@{/register}" class="btn btn-primary">Sign Up</a>
+            </div>
+
+            <div th:if="${user != null}" class="header-actions-group user-menu">
+                <span class="user-label">
+                    Hi, <a th:href="@{/profile}">
+                        <span th:text="${user.username}">User</span>
+                    </a>
+                </span>
+
+                <a th:href="@{/postlisting}" class="btn btn-primary">Post Listing</a>
+                <a th:href="@{/my-listings}" class="btn btn-outline">My Listings</a>
+                <a th:href="@{/editprofile}" class="btn btn-outline">Edit Profile</a>
+
+                <a th:if="${user.role.name() == 'ADMIN'}"
+                   th:href="@{/admin}"
+                   class="btn btn-outline">
+                    Admin
+                </a>
+
+                <form th:action="@{/logout}" method="post" class="inline-form">
+                    <button type="submit" class="btn btn-outline">Logout</button>
+                </form>
+            </div>
         </div>
     </div>
 </header>
 
 <main class="page">
-
-
     <section class="hero-bar">
         <div class="container hero-content">
             <div>
@@ -36,11 +61,8 @@
         </div>
     </section>
 
-
     <section class="section">
         <div class="container grid">
-
-
             <aside class="profile-card">
                 <div class="avatar">
                     <span th:text="${#strings.substring(user.fullName, 0, 1)}">J</span>
@@ -78,10 +100,7 @@
                 </div>
             </aside>
 
-
             <section class="main-panel">
-
-
                 <div class="stats-row">
                     <div class="stat-card">
                         <span class="stat-label">Total listings</span>
@@ -92,7 +111,6 @@
                         <span class="stat-value" th:text="${activeListings}">0</span>
                     </div>
                 </div>
-
 
                 <div class="card">
                     <div class="card-header">

@@ -5,32 +5,31 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-
-    @Entity
-    @Builder
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
+@Entity
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Listing {
 
-
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+        @GeneratedValue(strategy = GenerationType.UUID)
+        private UUID id;
 
-        @ManyToOne
+        @ManyToOne(optional = false)
         private User owner;
 
         @Column(nullable = false)
         private String title;
 
-        @Column(nullable = false)
-        private String brand;
+        @ManyToOne(optional = false)
+        private Brand brand;
 
-        @Column(nullable = false)
-        private String model;
+        @ManyToOne(optional = false)
+        private CarModel model;
 
         @Column(nullable = false)
         private Integer year;
@@ -38,10 +37,8 @@ public class Listing {
         @Column(nullable = false)
         private Integer mileageKm;
 
-
-        @Column(nullable = false,scale = 2)
+        @Column(nullable = false, scale = 2)
         private BigDecimal price;
-
 
         @Enumerated(EnumType.STRING)
         @Column(nullable = false, length = 20)
@@ -61,25 +58,21 @@ public class Listing {
         @Column(nullable = false, length = 100)
         private String location;
 
-
         @Column(nullable = false, length = 4000)
         private String description;
 
-
         @Enumerated(EnumType.STRING)
         @Column(nullable = false, length = 20)
-        private ListingStatus status = ListingStatus.DRAFT;
+        private ListingStatus status;
 
         @Column(nullable = false)
         private boolean active = true;
-
 
         @Column(nullable = false, updatable = false)
         private LocalDateTime createdAt = LocalDateTime.now();
 
         @Column(nullable = false)
         private LocalDateTime updatedAt = LocalDateTime.now();
-
 
         @Column(length = 255)
         private String mainImageUrl;

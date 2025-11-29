@@ -1,39 +1,39 @@
 package main.web.dto;
 
 import jakarta.validation.constraints.*;
-import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
-import java.math.BigDecimal;
-import java.util.List;
-
+import lombok.Getter;
+import lombok.Setter;
 import main.model.CarBodyType;
 import main.model.FuelType;
 import main.model.TransmissionType;
-import main.model.ListingStatus;
 
-@Data
+import java.math.BigDecimal;
+import java.util.UUID;
+
+@Getter
+@Setter
 public class CreateListingRequest {
 
     @NotBlank
     private String title;
 
-    @NotBlank
-    private String location;
+    @NotNull
+    private UUID brandId;
 
-    @NotBlank
-    private String brand;
-
-    @NotBlank
-    private String model;
+    @NotNull
+    private UUID modelId;
 
     @NotNull
     @Min(1900)
-    @Max(2100)
     private Integer year;
 
     @NotNull
-    @Min(0)
-    private Integer mileageKm ;
+    @Positive
+    private Integer mileageKm;
+
+    @NotNull
+    @Positive
+    private BigDecimal price;
 
     @NotNull
     private FuelType fuelType;
@@ -41,17 +41,15 @@ public class CreateListingRequest {
     @NotNull
     private TransmissionType transmission;
 
-    @NotNull
     private CarBodyType bodyType;
 
-    @NotNull
-    @DecimalMin(value = "0.0", inclusive = false)
-    private BigDecimal price;
+    private String engine;
+
+    @NotBlank
+    private String location;
 
     @NotBlank
     private String description;
 
     private String mainImageUrl;
-
-
 }

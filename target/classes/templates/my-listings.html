@@ -13,19 +13,46 @@
     <div class="logo">
       <a th:href="@{/}">CarMarket</a>
     </div>
+
     <nav class="main-nav">
       <a th:href="@{/cars}">Browse Cars</a>
       <a th:href="@{/postlisting}">Post Listing</a>
       <a th:href="@{/about}">About</a>
+      <a th:href="@{/contact}">Contact</a>
     </nav>
-    <div class="header-actions" th:if="${user != null}">
-      <span class="user-label">
-        Hi, <span th:text="${user.username}">username</span>
-      </span>
-      <a th:href="@{/logout}" class="btn btn-outline">Logout</a>
+
+    <div class="header-actions">
+      <div th:if="${user == null}" class="header-actions-group">
+        <a th:href="@{/login}" class="btn btn-outline">Login</a>
+        <a th:href="@{/register}" class="btn btn-primary">Sign Up</a>
+      </div>
+
+      <div th:if="${user != null}" class="header-actions-group user-menu">
+                <span class="user-label">
+    Hi, <a th:href="@{/profile}">
+        <span th:text="${user.username}">User</span>
+    </a>
+</span>
+
+        <a th:href="@{/postlisting}" class="btn btn-primary">Post Listing</a>
+        <a th:href="@{/my-listings}" class="btn btn-outline">My Listings</a>
+        <a th:href="@{/editprofile}" class="btn btn-outline">Edit Profile</a>
+
+        <a th:if="${user.role.name() == 'ADMIN'}"
+           th:href="@{/admin}"
+           class="btn btn-outline">
+          Admin
+        </a>
+
+        <form th:action="@{/logout}" method="post" class="inline-form">
+          <button type="submit" class="btn btn-outline">Logout</button>
+        </form>
+      </div>
     </div>
   </div>
 </header>
+
+
 
 <main class="page">
 

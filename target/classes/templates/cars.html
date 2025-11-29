@@ -16,26 +16,37 @@
 
     <nav class="main-nav">
       <a th:href="@{/cars}">Browse Cars</a>
-
-
-      <a th:href="@{/postlisting}"
-         th:if="${session.user_id != null}">
-        Post Listing
-      </a>
-
+      <a th:href="@{/postlisting}">Post Listing</a>
       <a th:href="@{/about}">About</a>
+      <a th:href="@{/contact}">Contact</a>
     </nav>
 
     <div class="header-actions">
-      <div th:if="${session.user_id == null}">
+      <div th:if="${user == null}" class="header-actions-group">
         <a th:href="@{/login}" class="btn btn-outline">Login</a>
         <a th:href="@{/register}" class="btn btn-primary">Sign Up</a>
       </div>
 
+      <div th:if="${user != null}" class="header-actions-group user-menu">
+                <span class="user-label">
+    Hi, <a th:href="@{/profile}">
+        <span th:text="${user.username}">User</span>
+    </a>
+</span>
 
-      <div class="user-menu" th:if="${session.user_id != null}">
-        <a th:href="@{/profile}" class="btn btn-outline">Profile</a>
-        <a th:href="@{/logout}" class="btn btn-primary">Logout</a>
+        <a th:href="@{/postlisting}" class="btn btn-primary">Post Listing</a>
+        <a th:href="@{/my-listings}" class="btn btn-outline">My Listings</a>
+        <a th:href="@{/editprofile}" class="btn btn-outline">Edit Profile</a>
+
+        <a th:if="${user.role.name() == 'ADMIN'}"
+           th:href="@{/admin}"
+           class="btn btn-outline">
+          Admin
+        </a>
+
+        <form th:action="@{/logout}" method="post" class="inline-form">
+          <button type="submit" class="btn btn-outline">Logout</button>
+        </form>
       </div>
     </div>
   </div>
@@ -49,14 +60,14 @@
   <section class="hero-bar">
     <div class="container">
       <h1>Find your next car</h1>
-      <p>Browse thousands of listings from private sellers and trusted dealers.</p>
+      <p>Browse listings from private sellers and trusted dealers.</p>
     </div>
   </section>
 
 
   <section class="filters-section">
     <div class="container">
-      <form class="filters" action="/cars" method="get">
+      <form class="filters" th:action="@{/cars}" method="get">
         <div class="filter-group">
           <label for="make">Make</label>
           <select id="make" name="make">
@@ -95,44 +106,54 @@
     </div>
   </section>
 
+
   <section class="section">
     <div class="container">
-      <div class="car-grid">
 
 
-        <article class="car-card">
-          <div class="car-img"></div>
+      <div class="car-grid" th:if="${listings != null and !#lists.isEmpty(listings)}">
+
+        <article class="car-card" th:each="listing : ${listings}">
+          <div class="car-img">
+
+            <img th:if="${listing.mainImageUrl != null and !#strings.isEmpty(listing.mainImageUrl)}"
+                 th:src="${listing.mainImageUrl}"
+                 alt="Car photo">
+
+
+            <div th:if="${listing.mainImageUrl == null or #strings.isEmpty(listing.mainImageUrl)}"
+                 class="car-img-placeholder">
+              No photo
+            </div>
+          </div>
+
           <div class="car-info">
-            <h3>2019 BMW 320d</h3>
-            <p class="price">€16,900</p>
-            <p class="details">Diesel • 150,000 km • Automatic</p>
-            <p class="location">Sofia, Bulgaria</p>
-            <a href="/cars/1" class="btn btn-view">View</a>
+            <h3 th:text="${listing.title}">Car title</h3>
+
+            <p class="price"
+               th:text="'€' + ${listing.price}">
+              €0
+            </p>
+
+            <p class="details"
+               th:text="${listing.fuelType} + ' • ' + ${listing.mileageKm} + ' km • ' + ${listing.transmission}">
+              Fuel • Mileage • Transmission
+            </p>
+
+            <p class="location" th:text="${listing.location}">
+              Location
+            </p>
+
+
+            <a th:href="@{'/cars/' + ${listing.id}}" class="btn btn-view">View</a>
           </div>
         </article>
 
-        <article class="car-card">
-          <div class="car-img"></div>
-          <div class="car-info">
-            <h3>2017 Audi A4</h3>
-            <p class="price">€14,200</p>
-            <p class="details">Petrol • 120,000 km • Manual</p>
-            <p class="location">Plovdiv, Bulgaria</p>
-            <a href="/cars/2" class="btn btn-view">View</a>
-          </div>
-        </article>
+      </div>
 
-        <article class="car-card">
-          <div class="car-img"></div>
-          <div class="car-info">
-            <h3>2020 Toyota Corolla</h3>
-            <p class="price">€18,500</p>
-            <p class="details">Hybrid • 80,000 km • Automatic</p>
-            <p class="location">Varna, Bulgaria</p>
-            <a href="/cars/3" class="btn btn-view">View</a>
-          </div>
-        </article>
 
+      <div th:if="${listings == null or #lists.isEmpty(listings)}">
+        <p>No cars found. Try changing your filters or check back later.</p>
       </div>
 
 
@@ -152,9 +173,9 @@
   <div class="container footer-content">
     <p>© <span id="year"></span> CarMarket. All rights reserved.</p>
     <div class="footer-links">
-      <a href="/about">About</a>
-      <a href="/terms">Terms</a>
-      <a href="/privacy">Privacy</a>
+      <a th:href="@{/about}">About</a>
+      <a th:href="@{/terms}">Terms</a>
+      <a th:href="@{/privacy}">Privacy</a>
     </div>
   </div>
 </footer>
