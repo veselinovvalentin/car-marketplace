@@ -34,7 +34,7 @@ public class User {
     private String phoneNumber;
 
     @Column
-    private String city;
+    private String location;
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

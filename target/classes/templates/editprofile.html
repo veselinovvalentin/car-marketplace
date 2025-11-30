@@ -72,11 +72,20 @@
                     This information is used when you post listings and when buyers contact you.
                     Make sure it is accurate and up to date.
                 </p>
+
                 <ul>
                     <li>Your email is used for login and important messages.</li>
                     <li>Your phone can be shown on listings if you choose so later.</li>
                     <li>Username is your public identity on the platform.</li>
                 </ul>
+
+                <div class="info-box">
+                    <h3>Account email</h3>
+                    <p>
+                        <strong th:text="${user.email}">john.doe@example.com</strong><br>
+                        This email cannot be changed here. Contact support if you need to update it.
+                    </p>
+                </div>
 
                 <div class="info-box">
                     <h3>Need to change password?</h3>
@@ -87,57 +96,40 @@
                 </div>
             </aside>
 
-            <form class="profile-form" th:action="@{/profile/edit}" method="post">
+            <form class="profile-form"
+                  th:action="@{/profile/edit}"
+                  th:object="${editProfile}"
+                  method="post">
                 <h2>Profile details</h2>
 
                 <div class="form-row">
                     <div class="form-control">
                         <label for="fullName">Full name</label>
-                        <input id="fullName" name="fullName" type="text"
+                        <input id="fullName" type="text"
+                               th:field="*{fullName}"
                                placeholder="John Doe" required>
                     </div>
                     <div class="form-control">
                         <label for="username">Username</label>
-                        <input id="username" name="username" type="text"
+                        <input id="username" type="text"
+                               th:field="*{username}"
                                placeholder="johndoe" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-control">
-                        <label for="email">Email</label>
-                        <input id="email" name="email" type="email"
-                               placeholder="john.doe@example.com" required>
-                    </div>
-                    <div class="form-control">
-                        <label for="phoneNumber">Phone number (optional)</label>
-                        <input id="phoneNumber" name="phoneNumber" type="tel"
+                        <label for="phoneNumber">Phone number</label>
+                        <input id="phoneNumber" type="tel"
+                               th:field="*{phoneNumber}"
                                placeholder="+359 88 123 4567">
                     </div>
-                </div>
-
-                <div class="form-row">
                     <div class="form-control">
                         <label for="location">Location (city)</label>
-                        <input id="location" name="location" type="text"
+                        <input id="location" type="text"
+                               th:field="*{location}"
                                placeholder="Sofia, Bulgaria">
                     </div>
-                    <div class="form-control">
-                        <label for="dealerProfile">Dealer profile (optional)</label>
-                        <select id="dealerProfile" name="dealerId">
-                            <option value="">Not a dealer / none</option>
-                            <option value="1">AutoStar Dealership</option>
-                            <option value="2">Premium Motors</option>
-                            <option value="3">CityCars Sofia</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-control form-control-inline">
-                    <label class="checkbox-label">
-                        <input id="showPhone" name="showPhoneOnListings" type="checkbox">
-                        <span>Show my phone number on my listings (optional).</span>
-                    </label>
                 </div>
 
                 <div class="form-actions">
@@ -145,6 +137,9 @@
                     <a th:href="@{/profile}" class="btn btn-light">Cancel</a>
                 </div>
             </form>
+
+
+
         </div>
     </section>
 </main>

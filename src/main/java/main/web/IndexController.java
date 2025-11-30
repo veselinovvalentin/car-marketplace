@@ -73,20 +73,6 @@ public class IndexController {
     }
 
 
-
-    @GetMapping("/editprofile")
-    public ModelAndView getEditProfilePage(Principal principal) {
-        ModelAndView modelAndView = new ModelAndView("editprofile");
-
-        if (principal != null) {
-            String username = principal.getName();
-            User user = userService.getByUsername(username);
-            modelAndView.addObject("user", user);
-        }
-
-        return modelAndView;
-    }
-
     @GetMapping("/cardetails")
     public ModelAndView getCarDetailsPage() {
         return new ModelAndView("cardetails");

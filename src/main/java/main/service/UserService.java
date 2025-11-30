@@ -1,11 +1,10 @@
 package main.service;
 
 import lombok.extern.slf4j.Slf4j;
-import main.exception.DomainException;
 import main.model.User;
 import main.model.UserRole;
 import main.repository.UserRepository;
-import main.web.dto.LoginRequest;
+import main.web.dto.EditProfileDto;
 import main.web.dto.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -61,10 +60,19 @@ public class UserService {
         return user;
     }
 
-    public User getById(UUID id) {
+    public void updateProfile(UUID userId, EditProfileDto dto) {
 
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User with [%s] id does not exist.".formatted(id)));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.setFullName(dto.getFullName());
+        user.setUsername(dto.getUsername());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        user.setLocation(dto.getLocation());
+
+        userRepository.save(user);
     }
+
 
     public User getByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User with [%s] does not exist.".formatted(username)));
