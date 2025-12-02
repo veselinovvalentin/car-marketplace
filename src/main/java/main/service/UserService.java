@@ -73,6 +73,32 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void changePassword(String username, String oldPassword, String newPassword) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found."));
+
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Your current password is incorrect.");
+        }
+
+
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new IllegalArgumentException("New password cannot be the same as the old one.");
+        }
+
+
+        if (newPassword.length() < 6) {
+            throw new IllegalArgumentException("New password must be at least 6 characters long.");
+        }
+
+
+        String encoded = passwordEncoder.encode(newPassword);
+        user.setPassword(encoded);
+        userRepository.save(user);
+    }
+
 
     public User getByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User with [%s] does not exist.".formatted(username)));

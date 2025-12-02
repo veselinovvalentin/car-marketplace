@@ -398,6 +398,28 @@ img {
     }
 }
 
+
+
+.alert {
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+}
+
+.alert-success {
+    background: #ecfdf3;
+    border: 1px solid #4ade80;
+    color: #166534;
+}
+
+.alert-error {
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #b91c1c;
+}
+
+
 @media (max-width: 640px) {
     .header-content {
         justify-content: space-between;

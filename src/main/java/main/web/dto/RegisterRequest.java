@@ -23,7 +23,7 @@ public class RegisterRequest {
     private String email;
 
     @Size(max = 20, message = "Phone number must be at most 20 characters.")
-    private String phoneNumber;   // optional
+    private String phoneNumber;
 
     @NotBlank(message = "Password is required.")
     @Size(min = 6, max = 32, message = "Password must be between 6 and 32 characters.")

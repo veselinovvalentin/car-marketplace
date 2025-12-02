@@ -52,6 +52,8 @@ public class IndexController {
         return modelAndView;
     }
 
+
+
     @PostMapping("/register")
     public ModelAndView register(@Valid RegisterRequest registerRequest,
                                  BindingResult bindingResult,

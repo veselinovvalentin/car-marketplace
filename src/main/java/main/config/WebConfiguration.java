@@ -36,12 +36,13 @@ public class WebConfiguration {
                                 "/cardetails/**"
                         ).permitAll()
 
-                        // pages that require login
+
                         .requestMatchers(
                                 "/postlisting",
                                 "/editprofile",
                                 "/my-listings",
-                                "/profile/**"
+                                "/profile/**",
+                                "/changepassword"
                         ).authenticated()
 
 
