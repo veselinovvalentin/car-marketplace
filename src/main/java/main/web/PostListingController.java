@@ -62,6 +62,7 @@ public class PostListingController {
             return "redirect:/login";
         }
 
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("brands", brandRepository.findAll());
             model.addAttribute("models", carModelRepository.findAll());
@@ -71,7 +72,15 @@ public class PostListingController {
         String username = principal.getName();
         User user = userService.getByUsername(username);
 
-        listingService.createListing(user, request);
+        try {
+            listingService.createListing(user, request);
+        } catch (RuntimeException ex) {
+            bindingResult.reject("listingError", ex.getMessage());
+
+            model.addAttribute("brands", brandRepository.findAll());
+            model.addAttribute("models", carModelRepository.findAll());
+            return "postlisting";
+        }
 
         return "redirect:/cars";
     }

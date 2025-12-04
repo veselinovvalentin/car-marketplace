@@ -40,7 +40,9 @@ public class AdminController {
                                 @ModelAttribute("brandError") String brandError,
                                 @ModelAttribute("brandSuccess") String brandSuccess,
                                 @ModelAttribute("modelError") String modelError,
-                                @ModelAttribute("modelSuccess") String modelSuccess) {
+                                @ModelAttribute("modelSuccess") String modelSuccess,
+                                @ModelAttribute("listingSuccess") String listingSuccess,
+                                @ModelAttribute("userSuccess") String userSuccess) {
 
         if (principal != null) {
             String username = principal.getName();
@@ -52,6 +54,7 @@ public class AdminController {
         model.addAttribute("pendingListings", pendingListings);
         model.addAttribute("brands", brandService.findAll());
         model.addAttribute("models", carModelService.findAll());
+        model.addAttribute("users", userService.getAllUsers());
 
         if (brandError != null && !brandError.isEmpty()) {
             model.addAttribute("brandError", brandError);
@@ -64,6 +67,12 @@ public class AdminController {
         }
         if (modelSuccess != null && !modelSuccess.isEmpty()) {
             model.addAttribute("modelSuccess", modelSuccess);
+        }
+        if (listingSuccess != null && !listingSuccess.isEmpty()) {
+            model.addAttribute("listingSuccess", listingSuccess);
+        }
+        if (userSuccess != null && !userSuccess.isEmpty()) {
+            model.addAttribute("userSuccess", userSuccess);
         }
 
         return "admin";
@@ -131,6 +140,22 @@ public class AdminController {
                                 RedirectAttributes redirectAttributes) {
         listingService.rejectListing(id);
         redirectAttributes.addFlashAttribute("listingSuccess", "Listing rejected");
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/users/{id}/deactivate")
+    public String deactivateUser(@PathVariable("id") UUID id,
+                                 RedirectAttributes redirectAttributes) {
+        userService.deactivateUser(id);
+        redirectAttributes.addFlashAttribute("userSuccess", "User deactivated");
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/users/{id}/activate")
+    public String activateUser(@PathVariable("id") UUID id,
+                               RedirectAttributes redirectAttributes) {
+        userService.activateUser(id);
+        redirectAttributes.addFlashAttribute("userSuccess", "User activated");
         return "redirect:/admin";
     }
 }

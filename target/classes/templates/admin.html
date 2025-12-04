@@ -6,6 +6,7 @@
     <title>Admin Dashboard • CarMarket</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 <body>
 <header class="site-header">
@@ -74,6 +75,71 @@
             </div>
         </div>
     </section>
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h2>User management</h2>
+                    <p class="section-subtitle">Activate or deactivate user accounts.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Active</th>
+                            <th class="col-actions">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${users == null or #lists.isEmpty(users)}">
+                            <td colspan="6" class="empty-state">No users found.</td>
+                        </tr>
+                        <tr th:each="u : ${users}">
+                            <td th:text="${u.id}">1</td>
+                            <td th:text="${u.username}">username</td>
+                            <td th:text="${u.email}">email</td>
+                            <td th:text="${u.role}">USER</td>
+                            <td>
+                            <span class="badge"
+                                  th:classappend="${u.active} ? 'badge-pending' : 'badge-danger'"
+                                  th:text="${u.active ? 'ACTIVE' : 'INACTIVE'}">
+                                ACTIVE
+                            </span>
+                            </td>
+                            <td class="col-actions">
+                                <form th:if="${u.active}"
+                                      th:action="@{'/admin/users/' + ${u.id} + '/deactivate'}"
+                                      method="post"
+                                      style="display:inline-block;"
+                                      onsubmit="return confirm('Deactivate this user?');">
+                                    <button type="submit" class="btn btn-table btn-danger">Deactivate</button>
+                                </form>
+
+
+                                <form th:if="${!u.active}"
+                                      th:action="@{'/admin/users/' + ${u.id} + '/activate'}"
+                                      method="post"
+                                      style="display:inline-block;"
+                                      onsubmit="return confirm('Activate this user?');">
+                                    <button type="submit" class="btn btn-table btn-approve">Activate</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
 
     <section class="section">
         <div class="container">

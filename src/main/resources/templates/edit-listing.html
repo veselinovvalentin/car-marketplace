@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Listing • CarMarket</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/postlisting.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-content">
+    <div class="logo">
+      <a th:href="@{/}">CarMarket</a>
+    </div>
+
+    <nav class="main-nav">
+      <a th:href="@{/cars}">Browse Cars</a>
+      <a th:href="@{/postlisting}">Post Listing</a>
+      <a th:href="@{/about}">About</a>
+      <a th:href="@{/contact}">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <div th:if="${user == null}" class="header-actions-group">
+        <a th:href="@{/login}" class="btn btn-outline">Login</a>
+        <a th:href="@{/register}" class="btn btn-primary">Sign Up</a>
+      </div>
+
+      <div th:if="${user != null}" class="header-actions-group user-menu">
+                <span class="user-label">
+                    Hi, <a th:href="@{/profile}">
+                        <span th:text="${user.username}">User</span>
+                    </a>
+                </span>
+
+        <a th:href="@{/postlisting}" class="btn btn-primary">Post Listing</a>
+        <a th:href="@{/my-listings}" class="btn btn-outline">My Listings</a>
+        <a th:href="@{/editprofile}" class="btn btn-outline">Edit Profile</a>
+
+        <a th:if="${user.role.name() == 'ADMIN'}"
+           th:href="@{/admin}"
+           class="btn btn-outline">
+          Admin
+        </a>
+
+        <form th:action="@{/logout}" method="post" class="inline-form">
+          <button type="submit" class="btn btn-outline">Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="hero-bar">
+    <div class="container hero-content">
+      <div>
+        <h1>Edit listing</h1>
+        <p>Update information and improve your car listing.</p>
+      </div>
+      <div class="hero-badge">
+        <span>Edit Mode</span>
+        <strong th:text="${listing.title}">Listing</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container layout">
+
+      <aside class="tips-card">
+        <h2>Editing tips</h2>
+        <ul>
+          <li>Keep title short and descriptive.</li>
+          <li>Update mileage and condition regularly.</li>
+          <li>Use high-quality photos.</li>
+        </ul>
+      </aside>
+
+      <form class="listing-form"
+            th:action="@{'/my-listings/' + ${listing.id} + '/edit'}"
+            method="post"
+            th:object="${editListingRequest}">
+
+        <div class="form-group">
+          <h2>Car details</h2>
+
+          <div class="form-row">
+            <div class="form-control">
+              <label for="title">Listing title</label>
+              <input id="title" type="text" th:field="*{title}" required>
+            </div>
+
+            <div class="form-control">
+              <label for="location">Location</label>
+              <input id="location" type="text" th:field="*{location}" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-control">
+              <label for="brandId">Brand</label>
+              <select id="brandId" th:field="*{brandId}" required>
+                <option value="">Select brand</option>
+                <option th:each="brand : ${brands}"
+                        th:value="${brand.id}"
+                        th:text="${brand.name}">
+                </option>
+              </select>
+            </div>
+
+            <div class="form-control">
+              <label for="modelId">Model</label>
+              <select id="modelId" th:field="*{modelId}" required>
+                <option value="">Select model</option>
+                <option th:each="m : ${models}"
+                        th:value="${m.id}"
+                        th:text="${m.brand.name + ' ' + m.name}">
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-control">
+              <label for="year">Year</label>
+              <input id="year" type="number" min="1900" max="2025" th:field="*{year}" required>
+            </div>
+
+            <div class="form-control">
+              <label for="mileageKm">Mileage (km)</label>
+              <input id="mileageKm" type="number" min="0" th:field="*{mileageKm}" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-control">
+              <label for="fuelType">Fuel type</label>
+              <select id="fuelType" th:field="*{fuelType}" required>
+                <option value="PETROL">Petrol</option>
+                <option value="DIESEL">Diesel</option>
+                <option value="HYBRID">Hybrid</option>
+                <option value="ELECTRIC">Electric</option>
+                <option value="LPG">LPG</option>
+              </select>
+            </div>
+
+            <div class="form-control">
+              <label for="transmission">Transmission</label>
+              <select id="transmission" th:field="*{transmission}" required>
+                <option value="MANUAL">Manual</option>
+                <option value="AUTOMATIC">Automatic</option>
+                <option value="SEMI_AUTOMATIC">Semi-Automatic</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-control">
+              <label for="bodyType">Body type</label>
+              <select id="bodyType" th:field="*{bodyType}">
+                <option value="">Select body type</option>
+                <option value="VAN">Van</option>
+                <option value="SUV">SUV</option>
+                <option value="CABRIOLET">Cabriolet</option>
+                <option value="WAGON">Wagon</option>
+                <option value="COUPE">Coupe</option>
+                <option value="MINIVAN">Minivan</option>
+                <option value="PICKUP">Pickup</option>
+                <option value="SEDAN">Sedan</option>
+                <option value="STRETCH_LIMOUSINE">Stretch Limousine</option>
+                <option value="HATCHBACK">Hatchback</option>
+              </select>
+            </div>
+
+            <div class="form-control">
+              <label for="engine">Engine</label>
+              <input id="engine" type="text" th:field="*{engine}">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <h2>Pricing</h2>
+          <div class="form-control">
+            <label for="price">Price (€)</label>
+            <input id="price" type="number" min="0" th:field="*{price}" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <h2>Description</h2>
+          <div class="form-control">
+            <label for="description">Details about the car</label>
+            <textarea id="description" rows="5" th:field="*{description}" required></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <h2>Photos</h2>
+          <div class="form-control">
+            <label for="mainImageUrl">Main photo URL</label>
+            <input id="mainImageUrl" type="url" th:field="*{mainImageUrl}">
+            <small class="field-hint">Paste the URL of the main photo.</small>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save changes</button>
+          <a th:href="@{/my-listings}" class="btn-link">Cancel</a>
+        </div>
+
+      </form>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-content">
+    <p>© <span id="year"></span> CarMarket. All rights reserved.</p>
+    <div class="footer-links">
+      <a th:href="@{/about}">About</a>
+      <a th:href="@{/terms}">Terms</a>
+      <a th:href="@{/privacy}">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>

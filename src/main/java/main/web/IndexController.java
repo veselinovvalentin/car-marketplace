@@ -8,8 +8,10 @@ import main.service.UserService;
 import main.web.dto.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -46,28 +48,43 @@ public class IndexController {
     }
 
     @GetMapping("/register")
-    public ModelAndView getRegisterPage() {
-        ModelAndView modelAndView = new ModelAndView("register");
-        modelAndView.addObject("registerRequest", new RegisterRequest());
-        return modelAndView;
+    public String getRegisterPage(Model model) {
+        if (!model.containsAttribute("registerRequest")) {
+            model.addAttribute("registerRequest", new RegisterRequest());
+        }
+        return "register";
+    }
+
+
+    @GetMapping("/about")
+    public String getAboutPage(Model model, Principal principal) {
+
+        if (principal != null) {
+            model.addAttribute("user", userService.getByUsername(principal.getName()));
+        }
+
+        return "about";
     }
 
 
 
+
     @PostMapping("/register")
-    public ModelAndView register(@Valid RegisterRequest registerRequest,
-                                 BindingResult bindingResult,
-                                 RedirectAttributes redirectAttributes) {
+    public String register(
+            @Valid @ModelAttribute("registerRequest") RegisterRequest registerRequest,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            return new ModelAndView("register");
+            return "register";
         }
 
         userService.register(registerRequest);
         redirectAttributes.addFlashAttribute("successfulRegistration", "You have registered successfully");
 
-        return new ModelAndView("redirect:/login");
+        return "redirect:/login";
     }
+
 
     @GetMapping("/login")
     public ModelAndView getLoginPage() {

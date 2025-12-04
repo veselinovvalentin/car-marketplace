@@ -1,5 +1,6 @@
 package main.service;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import main.model.User;
 import main.model.UserRole;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,33 +33,34 @@ public class UserService {
 
     public User register(RegisterRequest registerRequest) {
 
+        return userRepository.save(
+                User.builder()
+                        .fullName(registerRequest.getFullName())
+                        .username(registerRequest.getUsername())
+                        .email(registerRequest.getEmail())
+                        .phoneNumber(registerRequest.getPhoneNumber())
+                        .password(passwordEncoder.encode(registerRequest.getPassword()))
+                        .role(UserRole.USER)
+                        .createdAt(LocalDateTime.now())
+                        .active(true)
+                        .build()
+        );
+    }
 
-        if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
-            throw new RuntimeException("Passwords do not match.");
-        }
+    @Transactional
+    public void deactivateUser(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setActive(false);
+        userRepository.save(user);
+    }
 
-        Optional<User> optionalUser = userRepository.findByUsername(registerRequest.getUsername());
-        if (optionalUser.isPresent()) {
-            throw new RuntimeException("User with [%s] username already exist.".formatted(registerRequest.getUsername()));
-
-        }
-
-        User user = User.builder()
-                .fullName(registerRequest.getFullName())
-                .username(registerRequest.getUsername())
-                .email(registerRequest.getEmail())
-                .phoneNumber(registerRequest.getPhoneNumber())
-                .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .role(UserRole.USER)
-                .createdAt(LocalDateTime.now())
-                .active(true)
-                .build();
-
-        user = userRepository.save(user);
-
-        log.info("New user profile was registered in the system for user [%s].".formatted(registerRequest.getUsername()));
-
-        return user;
+    @Transactional
+    public void activateUser(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setActive(true);
+        userRepository.save(user);
     }
 
     public void updateProfile(UUID userId, EditProfileDto dto) {
@@ -104,5 +107,7 @@ public class UserService {
         return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User with [%s] does not exist.".formatted(username)));
     }
 
-
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }

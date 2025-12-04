@@ -5,6 +5,7 @@
   <title>Browse Cars • CarMarket</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/cars.css">
+  <link rel="stylesheet" href="/css/navbar.css">
 </head>
 <body>
 
@@ -65,46 +66,7 @@
   </section>
 
 
-  <section class="filters-section">
-    <div class="container">
-      <form class="filters" th:action="@{/cars}" method="get">
-        <div class="filter-group">
-          <label for="make">Make</label>
-          <select id="make" name="make">
-            <option value="">Any</option>
-            <option>BMW</option>
-            <option>Audi</option>
-            <option>Mercedes</option>
-            <option>Toyota</option>
-            <option>Volkswagen</option>
-          </select>
-        </div>
 
-        <div class="filter-group">
-          <label for="priceFrom">Price From</label>
-          <input id="priceFrom" name="priceFrom" type="number" placeholder="2000">
-        </div>
-
-        <div class="filter-group">
-          <label for="priceTo">Price To</label>
-          <input id="priceTo" name="priceTo" type="number" placeholder="30000">
-        </div>
-
-        <div class="filter-group">
-          <label for="fuelType">Fuel</label>
-          <select id="fuelType" name="fuelType">
-            <option value="">Any</option>
-            <option>Petrol</option>
-            <option>Diesel</option>
-            <option>Hybrid</option>
-            <option>Electric</option>
-          </select>
-        </div>
-
-        <button class="btn btn-primary">Search</button>
-      </form>
-    </div>
-  </section>
 
 
   <section class="section">

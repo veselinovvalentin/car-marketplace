@@ -5,6 +5,7 @@
     <title>Post a Listing • CarMarket</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/postlisting.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 <body>
 
@@ -29,10 +30,10 @@
 
             <div th:if="${user != null}" class="header-actions-group user-menu">
                 <span class="user-label">
-    Hi, <a th:href="@{/profile}">
-        <span th:text="${user.username}">User</span>
-    </a>
-</span>
+                    Hi, <a th:href="@{/profile}">
+                        <span th:text="${user.username}">User</span>
+                    </a>
+                </span>
 
                 <a th:href="@{/postlisting}" class="btn btn-primary">Post Listing</a>
                 <a th:href="@{/my-listings}" class="btn btn-outline">My Listings</a>
@@ -61,10 +62,6 @@
                 <h1>Post a new listing</h1>
                 <p>Sell your car quickly by providing accurate information and good photos.</p>
             </div>
-            <div class="hero-badge">
-                <span>Step 1</span>
-                <strong>Listing details</strong>
-            </div>
         </div>
     </section>
 
@@ -76,12 +73,23 @@
                 <ul>
                     <li>Use a descriptive title – include make, model and year.</li>
                     <li>Add realistic mileage, year and price.</li>
-                    <li>Upload bright photos from different angles.</li>
                     <li>Be honest about the condition and any issues.</li>
                 </ul>
             </aside>
 
-            <form class="listing-form" th:action="@{/postlisting}" th:method="post" th:object="${createListingRequest}" enctype="multipart/form-data">
+            <form class="listing-form"
+                  th:action="@{/postlisting}"
+                  th:method="post"
+                  th:object="${createListingRequest}"
+                  enctype="multipart/form-data">
+
+
+                <div class="form-error" th:if="${#fields.hasGlobalErrors()}">
+                    <p th:each="err : ${#fields.globalErrors()}"
+                       th:text="${err}">
+                        Something went wrong.
+                    </p>
+                </div>
 
                 <div class="form-group">
                     <h2>Car details</h2>
@@ -89,12 +97,26 @@
                     <div class="form-row">
                         <div class="form-control">
                             <label for="title">Listing title</label>
-                            <input id="title" type="text" placeholder="2019 BMW 320d" required th:field="*{title}">
+                            <input id="title" type="text"
+                                   placeholder="2019 BMW 320d"
+                                   required th:field="*{title}">
+                            <small class="field-error"
+                                   th:if="${#fields.hasErrors('title')}"
+                                   th:errors="*{title}">
+                                Error
+                            </small>
                         </div>
 
                         <div class="form-control">
                             <label for="location">Location</label>
-                            <input id="location" type="text" placeholder="Sofia, Bulgaria" required th:field="*{location}">
+                            <input id="location" type="text"
+                                   placeholder="Sofia, Bulgaria"
+                                   required th:field="*{location}">
+                            <small class="field-error"
+                                   th:if="${#fields.hasErrors('location')}"
+                                   th:errors="*{location}">
+                                Error
+                            </small>
                         </div>
                     </div>
 
@@ -103,28 +125,60 @@
                             <label for="brandId">Brand</label>
                             <select id="brandId" required th:field="*{brandId}">
                                 <option value="">Select brand</option>
-                                <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                                <option th:each="brand : ${brands}"
+                                        th:value="${brand.id}"
+                                        th:text="${brand.name}">
+                                </option>
                             </select>
+                            <small class="field-error"
+                                   th:if="${#fields.hasErrors('brandId')}"
+                                   th:errors="*{brandId}">
+                                Error
+                            </small>
                         </div>
 
                         <div class="form-control">
                             <label for="modelId">Model</label>
                             <select id="modelId" required th:field="*{modelId}">
                                 <option value="">Select model</option>
-                                <option th:each="model : ${models}" th:value="${model.id}" th:text="${model.brand.name + ' ' + model.name}"></option>
+                                <option th:each="model : ${models}"
+                                        th:value="${model.id}"
+                                        th:text="${model.brand.name + ' ' + model.name}">
+                                </option>
                             </select>
+                            <small class="field-error"
+                                   th:if="${#fields.hasErrors('modelId')}"
+                                   th:errors="*{modelId}">
+                                Error
+                            </small>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-control">
                             <label for="year">Year</label>
-                            <input id="year" type="number" min="1900" max="2025" placeholder="2019" required th:field="*{year}">
+                            <input id="year" type="number"
+                                   min="1900" max="2025"
+                                   placeholder="2019"
+                                   required th:field="*{year}">
+                            <small class="field-error"
+                                   th:if="${#fields.hasErrors('year')}"
+                                   th:errors="*{year}">
+                                Error
+                            </small>
                         </div>
 
                         <div class="form-control">
                             <label for="mileageKm">Mileage (km)</label>
-                            <input id="mileageKm" type="number" min="0" placeholder="85000" required th:field="*{mileageKm}">
+                            <input id="mileageKm" type="number"
+                                   min="0"
+                                   placeholder="85000"
+                                   required th:field="*{mileageKm}">
+                            <small class="field-error"
+                                   th:if="${#fields.hasErrors('mileageKm')}"
+                                   th:errors="*{mileageKm}">
+                                Error
+                            </small>
                         </div>
                     </div>
 
@@ -139,6 +193,11 @@
                                 <option value="ELECTRIC">Electric</option>
                                 <option value="LPG">LPG</option>
                             </select>
+                            <small class="field-error"
+                                   th:if="${#fields.hasErrors('fuelType')}"
+                                   th:errors="*{fuelType}">
+                                Error
+                            </small>
                         </div>
 
                         <div class="form-control">
@@ -149,6 +208,11 @@
                                 <option value="AUTOMATIC">Automatic</option>
                                 <option value="SEMI_AUTOMATIC">Semi-Automatic</option>
                             </select>
+                            <small class="field-error"
+                                   th:if="${#fields.hasErrors('transmission')}"
+                                   th:errors="*{transmission}">
+                                Error
+                            </small>
                         </div>
                     </div>
 
@@ -168,11 +232,23 @@
                                 <option value="STRETCH_LIMOUSINE">Stretch Limousine</option>
                                 <option value="HATCHBACK">Hatchback</option>
                             </select>
+                            <small class="field-error"
+                                   th:if="${#fields.hasErrors('bodyType')}"
+                                   th:errors="*{bodyType}">
+                                Error
+                            </small>
                         </div>
 
                         <div class="form-control">
                             <label for="engine">Engine</label>
-                            <input id="engine" type="text" placeholder="2.0d, 1.4 TSI..." th:field="*{engine}">
+                            <input id="engine" type="text"
+                                   placeholder="2.0d, 1.4 TSI..."
+                                   th:field="*{engine}">
+                            <small class="field-error"
+                                   th:if="${#fields.hasErrors('engine')}"
+                                   th:errors="*{engine}">
+                                Error
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -183,7 +259,15 @@
                     <div class="form-row">
                         <div class="form-control">
                             <label for="price">Price (€)</label>
-                            <input id="price" type="number" min="0" placeholder="14900" required th:field="*{price}">
+                            <input id="price" type="number"
+                                   min="0"
+                                   placeholder="14900"
+                                   required th:field="*{price}">
+                            <small class="field-error"
+                                   th:if="${#fields.hasErrors('price')}"
+                                   th:errors="*{price}">
+                                Error
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -192,7 +276,14 @@
                     <h2>Description</h2>
                     <div class="form-control">
                         <label for="description">Details about the car</label>
-                        <textarea id="description" rows="5" placeholder="Describe condition, service history, extras, and anything important." required th:field="*{description}"></textarea>
+                        <textarea id="description" rows="5"
+                                  placeholder="Describe condition, service history, extras, and anything important."
+                                  required th:field="*{description}"></textarea>
+                        <small class="field-error"
+                               th:if="${#fields.hasErrors('description')}"
+                               th:errors="*{description}">
+                            Error
+                        </small>
                     </div>
                 </div>
 
@@ -201,8 +292,15 @@
 
                     <div class="form-control">
                         <label for="mainImageUrl">Main photo URL</label>
-                        <input id="mainImageUrl" type="url" placeholder="https://example.com/my-car.jpg" th:field="*{mainImageUrl}">
+                        <input id="mainImageUrl" type="url"
+                               placeholder="https://example.com/my-car.jpg"
+                               th:field="*{mainImageUrl}">
                         <small class="field-hint">Paste the URL of the main photo.</small>
+                        <small class="field-error"
+                               th:if="${#fields.hasErrors('mainImageUrl')}"
+                               th:errors="*{mainImageUrl}">
+                            Error
+                        </small>
                     </div>
                 </div>
 
