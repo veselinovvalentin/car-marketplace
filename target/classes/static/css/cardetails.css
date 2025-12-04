@@ -627,3 +627,9 @@ a {
         padding: 0.9rem;
     }
 }
+.hero-subtitle {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #cbd5f5;
+}
+

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>About • CarMarket</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/about.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-content">
+    <div class="logo">
+      <a th:href="@{/}">CarMarket</a>
+    </div>
+
+    <nav class="main-nav">
+      <a th:href="@{/cars}">Browse Cars</a>
+      <a th:href="@{/postlisting}">Post Listing</a>
+      <a th:href="@{/about}" class="active">About</a>
+      <a th:href="@{/contact}">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <div th:if="${user == null}" class="header-actions-group">
+        <a th:href="@{/login}" class="btn btn-outline">Login</a>
+        <a th:href="@{/register}" class="btn btn-primary">Sign Up</a>
+      </div>
+
+      <div th:if="${user != null}" class="header-actions-group user-menu">
+        <span class="user-label">
+          Hi, <a th:href="@{/profile}">
+            <span th:text="${user.username}">User</span>
+          </a>
+        </span>
+
+        <a th:href="@{/postlisting}" class="btn btn-primary">Post Listing</a>
+        <a th:href="@{/my-listings}" class="btn btn-outline">My Listings</a>
+        <a th:href="@{/editprofile}" class="btn btn-outline">Edit Profile</a>
+
+        <a th:if="${user.role.name() == 'ADMIN'}"
+           th:href="@{/admin}"
+           class="btn btn-outline">
+          Admin
+        </a>
+
+        <form th:action="@{/logout}" method="post" class="inline-form">
+          <button type="submit" class="btn btn-outline">Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<main class="page">
+
+  <section class="hero-bar">
+    <div class="container hero-content">
+      <div>
+        <h1>About CarMarket</h1>
+        <p>Your trusted place to buy and sell cars online, quickly and easily.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container about-content">
+
+      <div class="card">
+        <h2>What is CarMarket?</h2>
+        <p>
+          CarMarket is a simple and modern platform that helps people buy and sell cars without the
+          complexity of traditional classifieds. Whether you're a car enthusiast, a first-time buyer,
+          or simply selling your own vehicle, CarMarket makes the process fast, clean and effortless.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>What you can do</h2>
+        <ul>
+          <li>Post your car for sale in just a few minutes</li>
+          <li>Browse listings from private sellers</li>
+          <li>Manage your postings from your personal dashboard</li>
+          <li>Track approval status on your submitted listings</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Our mission</h2>
+        <p>
+          We believe selling a car shouldn’t be frustrating or time-consuming. Our goal is to provide
+          a clean, modern and user-friendly experience that puts both buyers and sellers first.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-content">
+    <p>© <span id="year"></span> CarMarket. All rights reserved.</p>
+    <div class="footer-links">
+      <a th:href="@{/terms}">Terms</a>
+      <a th:href="@{/privacy}">Privacy</a>
+      <a th:href="@{/contact}">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>

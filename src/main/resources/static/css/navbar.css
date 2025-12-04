@@ -1,0 +1,124 @@
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(15, 23, 42, 0.96);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 1.5rem;
+}
+
+.logo {
+    flex: 1 0 auto;
+}
+
+.logo a {
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.03em;
+    color: #fff;
+}
+
+.main-nav {
+    flex: 1 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 0.95rem;
+}
+
+.main-nav a {
+    color: #e5e7eb;
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    transition: background 0.18s ease-out, color 0.18s ease-out;
+}
+
+.main-nav a:hover {
+    background: rgba(148, 163, 184, 0.15);
+    color: #fff;
+}
+
+.header-actions {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-label {
+    font-size: 0.9rem;
+    color: #e5e7eb;
+}
+
+.user-label span {
+    color: #bfdbfe;
+    font-weight: 600;
+}
+
+.inline-form {
+    margin: 0;
+    display: inline;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.18s ease-out,
+    color 0.18s ease-out,
+    border-color 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    transform 0.12s ease-out;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #3b82f6;
+    color: #fff;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 35px rgba(37, 99, 235, 0.45);
+}
+
+.btn-outline {
+    border-color: rgba(156, 163, 175, 0.7);
+    color: #e5e7eb;
+    background: transparent;
+}
+
+.btn-outline:hover {
+    border-color: #e5e7eb;
+    background: rgba(148, 163, 184, 0.15);
+    color: #fff;
+}
